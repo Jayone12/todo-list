@@ -41,6 +41,11 @@ function ToDoList() {
         />
         <button>Add</button>
       </form>
+      <ul>
+        {toDos.map((toDo) => (
+          <li key={toDo.id}>{toDo.text}</li>
+        ))}
+      </ul>
     </div>
   );
 }
