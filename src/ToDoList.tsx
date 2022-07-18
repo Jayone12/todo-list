@@ -9,9 +9,14 @@ function ToDoList() {
     setValue(value);
   };
 
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log(value);
+  };
+
   return (
     <div>
-      <form>
+      <form onSubmit={onSubmit}>
         <input onChange={onChange} placeholder="Write a to do" />
         <button>Add</button>
       </form>
