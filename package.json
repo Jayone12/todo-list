@@ -52,5 +52,6 @@
   },
   "devDependencies": {
     "@types/styled-components": "^5.1.25"
-  }
+  },
+  "homepage": "https://Jayone12.github.io/todo-list/"
 }
