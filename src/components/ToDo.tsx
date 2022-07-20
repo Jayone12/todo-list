@@ -1,38 +1,69 @@
-import React from "react";
-import { useSetRecoilState } from "recoil";
-import { Categories, IToDo, toDoState } from "../atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import styled from "styled-components";
+import { categoryState, ITodo, toDoState } from "../atoms";
 
-function ToDo({ text, category, id }: IToDo) {
+const ToDoList = styled.li`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  h3 {
+    margin: 0;
+  }
+`;
+
+const Buttons = styled.div`
+  background-color: lightskyblue;
+  border-radius: 100px;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  .btn__remove {
+    background-color: lightblue;
+    border-radius: 10px;
+    font-size: 8px;
+  }
+`;
+
+function ToDo({ text, id, category }: ITodo) {
+  const categories = useRecoilValue(categoryState);
   const setToDos = useSetRecoilState(toDoState);
-  const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const {
-      currentTarget: { name },
-    } = event;
+
+  const onClick = (category: string) => {
     setToDos((oldToDos) => {
       return oldToDos.map((toDo) =>
-        toDo.id === id ? { text, id, category: name as Categories } : toDo
+        toDo.id === id ? { text, id, category } : toDo
       );
     });
   };
+
+  const handleDelete = () => {
+    setToDos((oldToDos) => {
+      const deleteTodo = oldToDos.filter((todo) => todo.id !== id);
+      return deleteTodo;
+    });
+  };
+
   return (
-    <li>
-      <span>{text}</span>
-      {category !== Categories.DOING && (
-        <button name={Categories.DOING} onClick={onClick}>
-          Doing
+    <ToDoList>
+      <h3>{text}</h3>
+      <Buttons>
+        {categories
+          .filter((categoryValue) => category !== categoryValue)
+          .map((category) => (
+            <button
+              className="btn__category"
+              onClick={() => onClick(category)}
+              key={category}
+            >
+              {category}
+            </button>
+          ))}
+        <button className="btn__remove" onClick={handleDelete}>
+          ❌
         </button>
-      )}
-      {category !== Categories.TO_DO && (
-        <button name={Categories.TO_DO} onClick={onClick}>
-          To Do
-        </button>
-      )}
-      {category !== Categories.DONE && (
-        <button name={Categories.DONE} onClick={onClick}>
-          Done
-        </button>
-      )}
-    </li>
+      </Buttons>
+    </ToDoList>
   );
 }
 export default ToDo;
