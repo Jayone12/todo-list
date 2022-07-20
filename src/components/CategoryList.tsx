@@ -1,6 +1,6 @@
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { toDoState } from "../atoms";
+import { categoryState, toDoState } from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 
@@ -26,12 +26,23 @@ const CategoryTitle = styled.div`
 
 function CategoryList({ category }: IProps) {
   const toDos = useRecoilValue(toDoState);
+  const setCategory = useSetRecoilState(categoryState);
+
+  const handleDelete = () => {
+    setCategory((categoryArr) => {
+      const deleteCategory = categoryArr.filter((value) => value !== category);
+      console.log(deleteCategory);
+      return deleteCategory;
+    });
+  };
 
   return (
     <Category key={category}>
       <CategoryTitle>
         <h2>{category}</h2>
-        <button className="btn__remove">❌</button>
+        <button onClick={handleDelete} className="btn__remove">
+          ❌
+        </button>
       </CategoryTitle>
       <hr />
       <CreateToDo category={category} />
